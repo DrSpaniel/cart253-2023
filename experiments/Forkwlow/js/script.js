@@ -18,30 +18,32 @@ function preload() {}
  */
 function setup() {
   createCanvas(640, 640);
-  background(255, 255, 180);
+  background(random(0, 640), random(0, 640), random(0, 640));
   noStroke();
 
-  //add circle, red to the center of the canvas
-  fill(255, 0, 0);
-  ellipse(320, 120, 200, 200); //coordinates of circle
+    //add circle, red to the center of the canvas
+fill(mouseX, mouseY, random(0, 255));
+ellipse(320, 120, 200, 200); //coordinates of circle
 
-  //add square, purple to the left of the circle
-  fill(255, 0, 255);
-  square(120, 120, 200); //coordinates of square
+//add square, purple to the left of the circle
+fill(random(0, 255), random(0, 255), random(0, 255));
+square(mouseX, random(0, 640), random(0, 640)); //coordinates of square
 
-  //add parallelogram, blue to the right of the canvas
-  fill(0, 0, 255);
-  quad(420, 120, 520, 120, 420, 240, 520, 240); //coordinates of parallelogram
+//add parallelogram, blue to the right of the canvas
+fill(random(0, 255), random(0, 255), random(0, 255));
+quad(random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640)); //coordinates of parallelogram
 
-  //add triangle, green to the bottom of the canvas
-  fill(0, 255, 0);
-  triangle(300, 420, 340, 420, 320, 380);
+//add triangle, green to the bottom of the canvas
+fill(random(0, 255), random(0, 255), random(0, 255));
+triangle(random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640));
 
   
-
 }
 
 /**
  * Description of draw()
  */
-function draw() {}
+function draw() {
+
+
+}
