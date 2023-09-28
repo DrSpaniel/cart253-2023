@@ -31,11 +31,15 @@ function setup() {
  * Description of draw()
  */
 function draw() {
+  //cursor("/assets/images/mouse.png")
+  //i tried to make the cursor look like a mouse but it didnt work :(
+
+
   diff = dist(x, y, mouseX, mouseY);
 
   background(
     //map(diff, 0, 255, 0, 255),
-    map(diff, 0, 1750, 255, 0),
+    map(diff, 0, 1000, 255, 0),
     0,
     0
   );
