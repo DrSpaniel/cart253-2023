@@ -31,8 +31,6 @@ function setup() {
  * Description of draw()
  */
 function draw() {
-  //cursor("exercises/catnmouse/assets/images/mouse.png")
-  //i tried to make the cursor look like a mouse but it didnt work :(
 
 
   diff = dist(x, y, mouseX, mouseY);
