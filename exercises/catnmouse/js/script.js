@@ -17,7 +17,7 @@ let diff = 0;
  * Description of preload
  */
 function preload() {
-  img = loadImage("exercises/catnmouse/assets/images/cat.jpeg");
+  img = loadImage("assets/images/cat.jpeg");
 }
 
 /**
