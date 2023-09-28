@@ -17,7 +17,7 @@ let diff = 0;
  * Description of preload
  */
 function preload() {
-  img = loadImage("/assets/images/cat.jpeg");
+  img = loadImage("exercises/catnmouse/assets/images/cat.jpeg");
 }
 
 /**
@@ -31,7 +31,7 @@ function setup() {
  * Description of draw()
  */
 function draw() {
-  //cursor("/assets/images/mouse.png")
+  //cursor("exercises/catnmouse/assets/images/mouse.png")
   //i tried to make the cursor look like a mouse but it didnt work :(
 
 
