@@ -37,7 +37,20 @@ quad(random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 6
 fill(random(0, 255), random(0, 255), random(0, 255));
 triangle(random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640), random(0, 640));
 
-  
+//make a pentagram shaped red that has random coordiantes
+
+fill(random(0, 255), random(0, 255), random(0, 255));
+beginShape();
+vertex(random(0, 640), random(0, 640));
+vertex(random(0, 640), random(0, 640));
+vertex(random(0, 640), random(0, 640));
+vertex(random(0, 640), random(0, 640));
+vertex(random(0, 640), random(0, 640));
+endShape(CLOSE);
+
+
+
+
 }
 
 /**
