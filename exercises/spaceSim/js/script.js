@@ -83,7 +83,7 @@ function explosion() {
   textSize(64);
   fill(255, 150, 150);
   textAlign(CENTER, CENTER);
-  text("explosion! :)", width / 2, height / 2);
+  text("explosion!", width / 2, height / 2);
   pop();
 }
 
@@ -100,8 +100,9 @@ function nearmiss() {
 /*GLOBAL VARIABLES*/
 
 let circle1 = {
+  //user controlled circle
   x: undefined,
-  y: 200,
+  y: undefined,
   size: 100,
   vx: 0,
   vy: 0,
@@ -123,16 +124,11 @@ let state = "title"; //can be title, simulation, explosion, nearmiss
 
 function circleSetup() {
   //position circles seperately
-  circle1.x = random(0, width / 2);
   circle2.x = random(width / 2, width);
 
-  circle1.y = random(0, width / 2);
   circle2.y = random(width / 2, width);
 
-  //start circles moving in a random direction
-  circle1.vx = random(-circle1.speed, circle1.speed);
   circle2.vx = random(-circle2.speed, circle2.speed);
-  circle1.vy = random(-circle1.speed, circle1.speed);
   circle2.vy = random(-circle2.speed, circle2.speed);
 }
 
@@ -143,6 +139,12 @@ function move() {
 
   circle2.x = circle2.x + circle2.vx;
   circle2.y = circle2.y + circle2.vy;
+  
+
+
+
+  circle1.x = mouseX;
+  circle1.y = mouseY;
 }
 
 function checkOffScreen() {
