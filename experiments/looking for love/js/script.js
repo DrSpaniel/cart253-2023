@@ -54,9 +54,25 @@ function title() {
   pop();
 }
 
-function love() {}
+function love() {
+  background(0);
+  push();
+  textSize(64);
+  fill(255, 150, 150);
+  textAlign(CENTER, CENTER);
+  text("LOVE! :)", width / 2, height / 2);
+  pop();
+}
 
-function sadness() {}
+function sadness() {
+  push();
+  background(0);
+  textSize(64);
+  fill(150, 150, 255);
+  textAlign(CENTER, CENTER);
+  text("NOT LOVE! :(", width / 2, height / 2);
+  pop();
+}
 
 /*GLOBAL VARIABLES*/
 
@@ -108,17 +124,16 @@ function move() {
 
 function checkOffScreen() {
   //check if circles have gone offscreen
-  if (
-    circle1.x < 0 ||
-    circle1.x > width ||
-    circle1.y < 0 ||
-    circle1.y < height ||
-    circle2.x < 0 ||
-    circle2.x > width ||
-    circle2.y < 0 ||
-    circle2.y > height
-  ) {
-    //SAD ENDING
+  if (isOffScreen(circle1) || isOffScreen(circle2)) {
+    state = "sadness";
+  }
+}
+
+function isOffScreen(circle) {
+  if (circle.x < 0 || circle.x > width || circle.y < 0 || circle.y > height) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -128,8 +143,8 @@ function checkOverlap() {
   let d = dist(circle1.x, circle1.y, circle2.x, circle2.y);
 
   if (d < circle1.size / 2 + circle2.size / 2) {
-    //HAPPY ENDING
-    //noLoop();
+    love();
+    noLoop();
   }
 }
 
