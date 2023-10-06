@@ -52,10 +52,14 @@ function draw() {
   if (state === "title") {
     title();
   } else if (state === "simulation") {
+    //print in the console "simulate!"
+    print("simulate!");
     simulate();
   } else if (state === "explosion") {
+    print("explosion!");
     explosion();
   } else if (state === "nearmiss") {
+    print("nearmiss!");
     nearmiss();
   }
 }
@@ -93,7 +97,7 @@ function nearmiss() {
   textSize(64);
   fill(150, 150, 255);
   textAlign(CENTER, CENTER);
-  text("NOT explosion! :(", width / 2, height / 2);
+  text("NOT explosion! :D", width / 2, height / 2);
   pop();
 }
 
@@ -111,7 +115,7 @@ let circle1 = {
 
 let circle2 = {
   x: undefined,
-  y: 200,
+  y: undefined,
   size: 100,
   vx: 0,
   vy: 0,
@@ -126,7 +130,7 @@ function circleSetup() {
   //position circles seperately
   circle2.x = random(width / 2, width);
 
-  circle2.y = random(width / 2, width);
+  circle2.y = random(height / 2, height);
 
   circle2.vx = random(-circle2.speed, circle2.speed);
   circle2.vy = random(-circle2.speed, circle2.speed);
