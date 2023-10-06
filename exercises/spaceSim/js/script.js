@@ -134,13 +134,12 @@ function circleSetup() {
 
 function move() {
   //move x and y of circles
-  circle1.x = circle1.x + circle1.vx;
+  /*circle1.x = circle1.x + circle1.vx;
   circle1.y = circle1.y + circle1.vy;
-
+*/
   circle2.x = circle2.x + circle2.vx;
   circle2.y = circle2.y + circle2.vy;
   
-
 
 
   circle1.x = mouseX;
