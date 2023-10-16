@@ -17,5 +17,5 @@ body {
   align-content: center;
   height: 100vh; /* Body is the height of the viewport */
   overflow: hidden; /* Hide anything that goes off the window size */
-  cursor: url("/assets/images/cursor-worm_kij6gi.png") 65 65, auto;   /* holy fuck, i had to do some stupid bullshit for this to work. christ*/
+  cursor: url("/assets/images/cursor-worm_kij6gi.png") 32 32, auto;   /* holy fuck, i had to do some stupid bullshit for this to work. christ*/
 }

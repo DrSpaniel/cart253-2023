@@ -77,16 +77,16 @@ function sadness() {
 /*GLOBAL VARIABLES*/
 
 let circle1 = {
-  x: undefined,
+  x: 300,
   y: 200,
   size: 100,
-  vx: 0,
-  vy: 0,
+  vx: 2.8,
+  vy: 1.05,
   speed: 3,
 };
 
 let circle2 = {
-  x: undefined,
+  x: 600,
   y: 200,
   size: 100,
   vx: 0,
@@ -107,10 +107,6 @@ function circleSetup() {
   circle2.y = random(width / 2, width);
 
   //start circles moving in a random direction
-  circle1.vx = random(-circle1.speed, circle1.speed);
-  circle2.vx = random(-circle2.speed, circle2.speed);
-  circle1.vy = random(-circle1.speed, circle1.speed);
-  circle2.vy = random(-circle2.speed, circle2.speed);
 }
 
 function move() {

@@ -1,34 +1,3 @@
-/**
- * project 1: bullet hell
- * Daniel Gonzalez
- *
- * this project is about a game where you have to avoid the obstacles, similar to "bullet hell" style games.
- *
- * the cursor is the spaceship, and meteors will be flying all over the screen. if the cursor touches the meteors, the game is over.
- *
-
-meteors can come from 16 different points at the borders.
-they will move toward where the mouse just was, then keep flying past the screen.
-after every 5 seconds, the meteors will fly faster, and will be more of them.
-if the mouse/ship touches one of the meteors, then then the scene changes to game over!
-
-there are 5 possible stages:
-title, game, over, shipChange, and leaderboard
-
-currently, i am working on game functionality over everything else.
-
-to start game functionality, i am working on getting the asteroid image to move toward the mouse and keep flying by.
-
-
-
-
-
-
-
- */
-
-//making 2 arrays, with both predetermined x and y coords to choose from that the meteors can spawn from
-
 "use strict";
 
 let meteor = {
@@ -37,47 +6,105 @@ let meteor = {
   img: 0,
   diff: 0,
   vx: 0,
-  vy: 2,
+  vy: 0,
+  initialVx: 0,
+  initialVy: 0,
   speed: 3,
+  meteorPos: 0,
+  randPosX: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  randPosY: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 };
 
-/**
- * Description of preload
- */
 function preload() {
   meteor.img = loadImage("assets/images/meteor.png");
 }
 
-/**
- * Description of setup
- */
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  meteor.x = windowWidth / 2 - 60;
-  meteor.y = 0;
+  frameRate(60);
+  mouseX = width / 2;
+  mouseY = height / 2;
+  meteor.randPosX = [
+    //this mess is all the predetermined locations the meteor.x can be in.
+    windowWidth / 4,
+    windowWidth / 2,
+    (3 * windowWidth) / 4,
+    windowWidth,
+    windowWidth,
+    windowWidth,
+    (3 * windowWidth) / 4,
+    windowWidth / 2,
+    windowWidth / 4,
+    0,
+    0,
+    0,
+  ];
+
+  meteor.randPosY = [
+    //this mess is the meteor.y preset coordinates. in the meteor spawn the meteorPos is randomized between all these.
+    0,
+    0,
+    0,
+    height / 4,
+    height / 2,
+    (3 * height) / 4,
+    height,
+    height,
+    height,
+    (3 * height) / 4,
+    height / 2,
+    height / 4,
+  ];
+
+  spawnMeteor();
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-/**
- * Description of draw()
- */
 function draw() {
-  //here ill have the different stages, changing depending on the outcomes
+  //meteor.diff = dist(meteor.x, meteor.y, mouseX, mouseY);
+  background(0, 34, 88); //plain colour for now
 
-  meteor.diff = dist(meteor.x, meteor.y, mouseX, mouseY); //this is used for the background gradient
+  image(meteor.img, meteor.x - 32, meteor.y - 32); //centering image so that tracking looks believable.
 
-  background(map(meteor.diff, 0, 1000, 255, 0), 0, 0); //red colour
+  calculateMeteorDirection(); // Call this function in draw to calculate direction
 
-  image(meteor.img, meteor.x, meteor.y); //this is the image, moving depending on x and y coords.
-  
-  move();
+  moveMeteor();
+
+  // Check if the meteor touches the bottom of the page and respawn if it does.
+  if (meteor.y > height || meteor.y < 0 || meteor.x > width || meteor.x < 0) {
+    spawnMeteor();
+  }
 }
 
-function move() {
-  //move x and y of circles
-  meteor.x = meteor.x + meteor.vx;
-  meteor.y = meteor.y + meteor.vy;      //trying to make this move toward the mouse but idek....
+function moveMeteor() {
+  // Update the meteor's position based on its velocity.
+  meteor.x += meteor.vx;
+  meteor.y += meteor.vy;
+}
+
+function calculateMeteorDirection() {
+  // Calculate the direction vector from the meteor to the mouse's last location.
+  const dx = mouseX - meteor.x; //first calculate x and y coord distance..
+  const dy = mouseY - meteor.y;
+  const magnitude = sqrt(dx * dx + dy * dy); //then, using pythagoras, find the direct distance between meteor and mouse
+
+  // Normalize the direction vector to get a unit vector.
+  if (meteor.y === 0) { //only resets vs and vy when meteor is at the top of the page, not when the meteor is respawned. PAIN
+    //this makes the meteor only work on the positions 0, 1, and 2. needs to be organized to put into spawn meteor thus updates every respawn.
+    meteor.initialVx = (dx / magnitude) * meteor.speed; //this will then make vx and vy follow said line that was calculated above.
+    meteor.initialVy = (dy / magnitude) * meteor.speed;
+  }
+  meteor.vx = meteor.initialVx;
+  meteor.vy = meteor.initialVy;
+}
+
+function spawnMeteor() {
+  meteor.meteorPos = random(0, 11);
+  meteor.x = meteor.randPosX[2]; // Start at the center of the canvas
+  meteor.y = meteor.randPosY[2];
+  print("reset!");
+  calculateMeteorDirection();
 }
