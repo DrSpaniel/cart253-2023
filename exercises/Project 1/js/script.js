@@ -30,17 +30,22 @@ to start game functionality, i am working on getting the asteroid image to move 
 //making 2 arrays, with both predetermined x and y coords to choose from that the meteors can spawn from
 
 "use strict";
-let img;
-let x;
-let y;
 
-let diff = 0;
+let meteor = {
+  x: 0,
+  y: 0,
+  img: 0,
+  diff: 0,
+  vx: 0,
+  vy: 2,
+  speed: 3,
+};
 
 /**
  * Description of preload
  */
 function preload() {
-  img = loadImage("assets/images/meteor.png");
+  meteor.img = loadImage("assets/images/meteor.png");
 }
 
 /**
@@ -48,12 +53,9 @@ function preload() {
  */
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  x = windowWidth/2 - 60;
-  y = windowHeight/2 - 60;
- 
+  meteor.x = windowWidth / 2 - 60;
+  meteor.y = 0;
 }
-
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -65,13 +67,17 @@ function windowResized() {
 function draw() {
   //here ill have the different stages, changing depending on the outcomes
 
+  meteor.diff = dist(meteor.x, meteor.y, mouseX, mouseY); //this is used for the background gradient
 
-  diff = dist(x, y, mouseX, mouseY); //this is used for the background gradient
+  background(map(meteor.diff, 0, 1000, 255, 0), 0, 0); //red colour
 
-  background(map(diff, 0, 1000, 255, 0), 0, 0); //red colour
-
-  image(img, x, y); //this is the image, moving depending on x and y coords.
-
+  image(meteor.img, meteor.x, meteor.y); //this is the image, moving depending on x and y coords.
   
+  move();
+}
 
+function move() {
+  //move x and y of circles
+  meteor.x = meteor.x + meteor.vx;
+  meteor.y = meteor.y + meteor.vy;      //trying to make this move toward the mouse but idek....
 }
