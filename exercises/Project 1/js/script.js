@@ -6,25 +6,42 @@
  *
  * the cursor is the spaceship, and meteors will be flying all over the screen. if the cursor touches the meteors, the game is over.
  *
- * after a certain amount of time, the meteors will start to move faster and faster, making it harder to avoid them.
- *
- * there will be a high score leaderboard which will show at the start of the game, and at the end of the game.
- *
- * the meteor images will be source in the /assets/images/meteorimgs folder. they will be randomized, and rotated randomly.
- *
- * the background will be a space background, and the cursor will be a spaceship.
- *
+
+meteors can come from 16 different points at the borders.
+they will move toward where the mouse just was, then keep flying past the screen.
+after every 5 seconds, the meteors will fly faster, and will be more of them.
+if the mouse/ship touches one of the meteors, then then the scene changes to game over!
+
+there are 5 possible stages:
+title, game, over, shipChange, and leaderboard
+
+currently, i am working on game functionality over everything else.
+
+to start game functionality, i am working on getting the asteroid image to move toward the mouse and keep flying by.
+
+
+
+
+
+
+
  */
 
+//making 2 arrays, with both predetermined x and y coords to choose from that the meteors can spawn from
+
 "use strict";
+let img;
+let x;
+let y;
+
+let diff = 0;
 
 /**
  * Description of preload
  */
-function preload() {}
-
-let state = "title"; //this makes the title screen show when the site is loaded
-
+function preload() {
+  img = loadImage("assets/images/meteor.png");
+}
 
 /**
  * Description of setup
@@ -32,15 +49,9 @@ let state = "title"; //this makes the title screen show when the site is loaded
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  drawShip(); //draws the spaceship, which is the cursor
-
-
-}
-
-function drawShip(){
-    //draws the spaceship, which is the cursor
-    cursor("assets/images/spaceship.png");
-    noCursor();
+  x = windowWidth/2 - 60;
+  y = windowHeight/2 - 60;
+ 
 }
 
 
@@ -54,47 +65,13 @@ function windowResized() {
 function draw() {
   //here ill have the different stages, changing depending on the outcomes
 
-  if (state === "title") {
-    //main screen
-    print("title!");
-    title();
-  } else if (state === "simulate") {
-    //gameplay
-    print("simulate!");
-    simulate();
-  } else if (state === "end") {
-    //kaboom! ending
-    print("end!");
-    end();
-  } else if (state === "changeShip") {
-    //low priority, changing the ship
-    print("changing ship!");
-    changeShip();
-  } else if (state === "leaderboard") {
-    //also low priority, leaderboard
-    print("leaderboard!");
-    leaderboard();
-  }
-}
 
-function title() {
+  diff = dist(x, y, mouseX, mouseY); //this is used for the background gradient
 
-    background(0);
-    fill(255);
-    textSize(50);
-    textAlign(CENTER, CENTER);
-    text("Bullet Hell", width / 2, height / 2);
-    
-    textSize(20);
-    text("press any key to start", width / 2, height / 2 + 50);
-    
-    if (keyIsPressed) {
-        state = "simulate";
-    }
+  background(map(diff, 0, 1000, 255, 0), 0, 0); //red colour
+
+  image(img, x, y); //this is the image, moving depending on x and y coords.
+
+  
 
 }
-
-function simulate(){
-    
-}
-
