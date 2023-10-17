@@ -3,22 +3,13 @@
 Daniel Gonzalez
 explosion actually
 
-basically just a modified version of looking for explosion, where
+basically just a modified version of looking for love, where
 
 the circles are planets, if they collide, they explode and the game ends.
 
-circle1 is now user controlled, and instead it follows the mouse but delayed
-
-circle2 gravitates toward circle1, and speeds up depending on how close it is to circle1, and simulates orbits
+circle1 is now user controlled, and instead it follows the mouse
 
 the background also turns more red the closer the circles get to each other
-
-there is now a restart button in the collision function
-
-oh yeah functions are renamed too
-
-if you do konami code the background shifts thru the rainbow
-
 
  */
 
@@ -27,7 +18,10 @@ if you do konami code the background shifts thru the rainbow
 /**
  * Description of preload
  */
-function preload() {}
+function preload() {
+  //saturnImg = loadImage("assets/images/saturn.png");
+  spaceshipImg = loadImage("assets/images/spaceship.png");
+}
 
 /**
  * Description of setup
@@ -49,6 +43,8 @@ function windowResized() {
  * Description of draw()
  */
 function draw() {
+
+  
   if (state === "title") {
     title();
   } else if (state === "simulation") {
@@ -65,11 +61,21 @@ function draw() {
 }
 
 function simulate() {
-  background(0);
+  redness();
   move();
   checkOffScreen();
   checkOverlap();
   display();
+}
+
+function redness() {
+  //this uses the map function to map the distance between the circles to a value between 0 and 255
+
+  let d = dist(circle1.x, circle1.y, circle2.x, circle2.y);
+
+  let redness = map(d, 0, width, 255, 0);
+
+  background(redness, 0, 0);
 }
 
 function title() {
@@ -87,7 +93,7 @@ function explosion() {
   textSize(64);
   fill(255, 150, 150);
   textAlign(CENTER, CENTER);
-  text("explosion!", width / 2, height / 2);
+  text("explosion! (yeah i know its broken i cant find the fix)", width / 2, height / 2);
   pop();
 }
 
@@ -129,7 +135,6 @@ let state = "title"; //can be title, simulation, explosion, nearmiss
 function circleSetup() {
   //position circles seperately
   circle2.x = random(width / 2, width);
-
   circle2.y = random(height / 2, height);
 
   circle2.vx = random(-circle2.speed, circle2.speed);
@@ -137,14 +142,8 @@ function circleSetup() {
 }
 
 function move() {
-  //move x and y of circles
-  /*circle1.x = circle1.x + circle1.vx;
-  circle1.y = circle1.y + circle1.vy;
-*/
   circle2.x = circle2.x + circle2.vx;
   circle2.y = circle2.y + circle2.vy;
-  
-
 
   circle1.x = mouseX;
   circle1.y = mouseY;
@@ -172,7 +171,6 @@ function checkOverlap() {
 
   if (d < circle1.size / 2 + circle2.size / 2) {
     explosion();
-    noLoop();
   }
 }
 
@@ -184,5 +182,7 @@ function display() {
 function mousePressed() {
   if (state === "title") {
     state = "simulation";
+  }else if (state === "nearmiss") {
+    location.reload();
   }
 }
