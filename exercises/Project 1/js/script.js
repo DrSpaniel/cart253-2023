@@ -1,5 +1,7 @@
 "use strict";
 
+let meteors = []; //array to store meteor objects
+
 let meteor = {
   x: 0,
   y: 0,
@@ -72,8 +74,11 @@ function draw() {
   calculateMeteorDirection(); // Call this function in draw to calculate direction
 
   moveMeteor();
+  wallCheck();
+}
 
-  // Check if the meteor touches the bottom of the page and respawn if it does.
+function wallCheck() {
+  // Check if the meteor touches any border
   if (meteor.y > height || meteor.y < 0 || meteor.x > width || meteor.x < 0) {
     spawnMeteor();
   }
@@ -91,26 +96,23 @@ function calculateMeteorDirection() {
   const dy = mouseY - meteor.y;
   const magnitude = sqrt(dx * dx + dy * dy); //then, using pythagoras, find the direct distance between meteor and mouse. linear algebra FUCK YEAH!
 
-
-    //here i want to make a check funtion when the meteor hits any of the walls.
-    //if the meteor hits a wall, then spawn a new meteor. make sure it doesnt mess up the spawning, meaning if y = 0, then it respawns at y = 0 and get weird.
-
-
-  // Normalize the direction vector to get a unit vector.
-  if (meteor.y === 0) {
-    //only resets vs and vy when meteor is at the top of the page, not when the meteor is respawned. PAIN
-    //this makes the meteor only work on the positions 0, 1, and 2. needs to be organized to put into spawn meteor thus updates every respawn.
+  if (meteor.vx === 0 && meteor.vy === 0) {
+    //this can only happen when spawnmeteor is triggered
     meteor.initialVx = (dx / magnitude) * meteor.speed; //this will then make vx and vy follow said line that was calculated above.
     meteor.initialVy = (dy / magnitude) * meteor.speed;
   }
-  meteor.vx = meteor.initialVx;     //this runs in draw, meaning that vx and vy will only change when the above is true. needs to change 
+  meteor.vx = meteor.initialVx; //this runs in draw, meaning that vx and vy will only change when the above is true.
   meteor.vy = meteor.initialVy;
 }
 
 function spawnMeteor() {
-  meteor.meteorPos = random(0, 11);
-  meteor.x = meteor.randPosX[2]; // Start at the center of the canvas
-  meteor.y = meteor.randPosY[2];
+  //meteor.speed++;
+  meteor.meteorPos = Math.floor(random(0, 12));
+  meteor.x = meteor.randPosX[meteor.meteorPos]; // Start at the center of the canvas
+  meteor.y = meteor.randPosY[meteor.meteorPos];
+  meteor.initialVx = 0; // Reset initialVX and initialVY when spawning a new meteor
+  meteor.initialVy = 0;
   print("reset!");
+  print(meteor.meteorPos);
   calculateMeteorDirection();
 }
