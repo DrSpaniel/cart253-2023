@@ -89,15 +89,21 @@ function calculateMeteorDirection() {
   // Calculate the direction vector from the meteor to the mouse's last location.
   const dx = mouseX - meteor.x; //first calculate x and y coord distance..
   const dy = mouseY - meteor.y;
-  const magnitude = sqrt(dx * dx + dy * dy); //then, using pythagoras, find the direct distance between meteor and mouse
+  const magnitude = sqrt(dx * dx + dy * dy); //then, using pythagoras, find the direct distance between meteor and mouse. linear algebra FUCK YEAH!
+
+
+    //here i want to make a check funtion when the meteor hits any of the walls.
+    //if the meteor hits a wall, then spawn a new meteor. make sure it doesnt mess up the spawning, meaning if y = 0, then it respawns at y = 0 and get weird.
+
 
   // Normalize the direction vector to get a unit vector.
-  if (meteor.y === 0) { //only resets vs and vy when meteor is at the top of the page, not when the meteor is respawned. PAIN
+  if (meteor.y === 0) {
+    //only resets vs and vy when meteor is at the top of the page, not when the meteor is respawned. PAIN
     //this makes the meteor only work on the positions 0, 1, and 2. needs to be organized to put into spawn meteor thus updates every respawn.
     meteor.initialVx = (dx / magnitude) * meteor.speed; //this will then make vx and vy follow said line that was calculated above.
     meteor.initialVy = (dy / magnitude) * meteor.speed;
   }
-  meteor.vx = meteor.initialVx;
+  meteor.vx = meteor.initialVx;     //this runs in draw, meaning that vx and vy will only change when the above is true. needs to change 
   meteor.vy = meteor.initialVy;
 }
 
