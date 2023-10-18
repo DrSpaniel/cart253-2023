@@ -1,4 +1,8 @@
 let scene = "title"; // Initial scene is set to "title"
+let meteorSpawnInterval; // Interval ID for spawning meteors
+let timer = 0; // Timer variable
+let isTimerRunning = false; // Variable to track if the timer is running
+let oldTimer = 0;
 
 class Meteor {
   constructor() {
@@ -109,9 +113,21 @@ function draw() {
       // If the mouse is clicked, transition to the simulation scene
       scene = "simulation";
       startMeteorSpawnInterval(); // Start spawning meteors
+      isTimerRunning = !isTimerRunning;
     }
   } else if (scene === "simulation") {
     background(0, 34, 88); // Set the background color to dark blue (RGB values).
+
+    // Update and display the timer
+    if (isTimerRunning) {
+      timer = millis() - oldTimer;
+      print("timer:" + timer);
+      print("oldTimer:" + oldTimer);
+    }
+    textSize(16);
+    fill(255);
+    textAlign(RIGHT, TOP);
+    text("Time: " + nf(timer/1000, 0, 2), width - 100, 10);
 
     for (let i = meteors.length - 1; i >= 0; i--) {
       const meteor = meteors[i]; // Get the current meteor object from the array.
@@ -130,10 +146,12 @@ function draw() {
       ) {
         meteors.splice(i, 1); // Remove meteors that go off-screen from the array.
       }
-      if (dist(meteor.x, meteor.y, mouseX, mouseY) < 55) {  //64 to account of radius of both meteor and ship. probably janky.
+      if (dist(meteor.x, meteor.y, mouseX, mouseY) < 55) {
+        //64 to account of radius of both meteor and ship. probably janky.
         // If the mouse touches a meteor, transition to the "end" scene
         scene = "end";
         clearInterval(meteorSpawnInterval); // Stop spawning meteors
+        isTimerRunning = !isTimerRunning;
       }
     }
   } else if (scene === "end") {
@@ -144,16 +162,22 @@ function draw() {
     text("DEAD.", width / 2, height / 2);
 
     textSize(24);
-    text("Click to Restart", width / 2, (3 * height) / 4); // Restart button
+    text("Time: " + nf(timer/1000, 0, 2) + "s", width / 2, (3 * height) / 4) ; // Display the elapsed time
+
+    textSize(24);
+    text("Click to Restart", width / 2, (2.5 * height) / 4); // Restart button
 
     if (mouseIsPressed) {
       // If the mouse is clicked, transition to the simulation scene and restart the simulation
       scene = "simulation";
       startMeteorSpawnInterval(); // Start spawning meteors
       meteors = [];
+      oldTimer = timer;  //this wont work, since millis counts even when timer is 
+      isTimerRunning = !isTimerRunning;   //resumes counting
+    
     }
- 
-  } else if (scene === "board") {   //WIP, this will be a leaderboard to submit results. title page will have a list
+  } else if (scene === "board") {
+    //WIP, this will be a leaderboard to submit results. title page will have a list
 
     background(0); // Set the background color to black
   }
