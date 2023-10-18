@@ -142,6 +142,16 @@ function draw() {
     textAlign(CENTER, CENTER);
     textSize(48);
     text("DEAD.", width / 2, height / 2);
+
+    textSize(24);
+    text("Click to Restart", width / 2, (3 * height) / 4); // Restart button
+
+    if (mouseIsPressed) {
+      // If the mouse is clicked, transition to the simulation scene and restart the simulation
+      scene = "simulation";
+      startMeteorSpawnInterval(); // Start spawning meteors
+      meteors = [];
+    }
  
   } else if (scene === "board") {   //WIP, this will be a leaderboard to submit results. title page will have a list
 
