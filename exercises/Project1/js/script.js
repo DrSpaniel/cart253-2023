@@ -1,7 +1,6 @@
 let scene = "title"; // Initial scene is set to "title"
 let meteorSpawnInterval; // Interval ID for spawning meteors
 let timer = 0; // Timer variable, trying to use this and oldtimer to count
-let difficulty = 0;
 let frequency = 0;
 let timerInterval;
 
@@ -47,7 +46,7 @@ class Meteor {
       height / 2,
       height / 4,
     ];
-    this.img = loadImage("assets/images/meteor.png"); //meteor image, maybe wanna make this randomized to have different meteors?
+    this.img = loadImage(`assets/images/meteors/meteor${Math.floor(random(0, 7))}.png`); //meteor image, maybe wanna make this randomized to have different meteors?
     this.spawnMeteor();
   }
 
@@ -138,6 +137,7 @@ function draw() {
     }
   } else if (scene === "simulation") {
     print(timer);
+
     background(0, 34, 88); // Set the background color to dark blue (RGB values).
 
     textSize(16);
