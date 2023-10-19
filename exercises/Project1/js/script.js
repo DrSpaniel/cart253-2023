@@ -86,6 +86,8 @@ class Meteor {
 }
 
 let meteors = []; // Array to hold meteor objects
+let initialSpeed = 1.5;
+let initialFrequency = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //autosize
@@ -93,7 +95,9 @@ function setup() {
   mouseX = width / 2; //if there is no mouse input, mouseX/Y default to 0. that looks kinda weird so i made it the center of the page to it looks a little nicer.
   mouseY = height / 2; //though i realize now this is useless, since the user has to click to start the game
   meteor = new Meteor(); // Create the initial meteor object
-  bg = loadImage('assets/images/space.jpg');
+  bg = loadImage("assets/images/space.jpg");
+  initialSpeed = 1.5; // Reset the initial speed
+  initialFrequency = 0; // Reset the initial frequency
 }
 
 function spawnNewMeteor() {
@@ -107,13 +111,23 @@ function startTimer() {
   timer = 0;
   timerInterval = setInterval(function () {
     timer++;
+    if (timer % 3 === 0) {
+      // Every 3 seconds, change the meteor speed and spawn frequency
+      for (let meteor of meteors) {
+        meteor.speed = Math.min(4, meteor.speed + 0.5); // Ensure speed doesn't go higher than 4
+      }
+      frequency = Math.max(160, frequency - 20);
+      clearInterval(meteorSpawnInterval);
+      startMeteorSpawnInterval();
+    }
   }, 1000);
+  for (let meteor of meteors) {
+    meteor.speed = initialSpeed;
+  }
+  frequency = initialFrequency;
 }
 
 function stopTimer() {
-  //when called, stops timer, passes timer value to oldtimer, and resets timer to 0
-  //set oldtimer to timer ONLY ONCE, otherwise it will keep updating
-
   clearInterval(timerInterval);
 }
 
@@ -140,7 +154,8 @@ function draw() {
     }
   } else if (scene === "simulation") {
     print(timer);
-
+print(frequency);
+print(meteor.speed);
     background(bg); // Set the background color to dark blue (RGB values).
 
     textSize(16);
@@ -182,7 +197,7 @@ function draw() {
     fill(255); // Set the fill color to white
     textAlign(CENTER, CENTER);
     textSize(48);
-    text("DEAD.", width / 2, height / 2);
+    text("You Died!", width / 2, height / 2);
 
     textSize(24);
     text("Time: " + timer + "s", width / 2, (3 * height) / 4); // Display the elapsed time
@@ -209,5 +224,5 @@ function windowResized() {
 }
 
 function startMeteorSpawnInterval() {
-  meteorSpawnInterval = setInterval(spawnNewMeteor, 200); // Start spawning meteors
+  meteorSpawnInterval = setInterval(spawnNewMeteor, 250); // Start spawning meteors
 }
