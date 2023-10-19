@@ -47,8 +47,8 @@ class Meteor {
       height / 4,
     ];
     this.img = loadImage(
-      `assets/images/meteors/meteor${Math.floor(random(0, 7))}.png`
-    ); //meteor image, maybe wanna make this randomized to have different meteors?
+      `assets/images/meteors/meteor${Math.floor(random(0, 7))}.png` //randomizes the meteor image
+    );
     this.spawnMeteor();
   }
 
@@ -86,8 +86,6 @@ class Meteor {
 }
 
 let meteors = []; // Array to hold meteor objects
-let initialSpeed = 1.5;
-let initialFrequency = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //autosize
@@ -110,24 +108,13 @@ function startTimer() {
 
   timer = 0;
   timerInterval = setInterval(function () {
+    //simple counter
     timer++;
-    if (timer % 3 === 0) {
-      // Every 3 seconds, change the meteor speed and spawn frequency
-      for (let meteor of meteors) {
-        meteor.speed = Math.min(4, meteor.speed + 0.5); // Ensure speed doesn't go higher than 4
-      }
-      frequency = Math.max(160, frequency - 20);
-      clearInterval(meteorSpawnInterval);
-      startMeteorSpawnInterval();
-    }
   }, 1000);
-  for (let meteor of meteors) {
-    meteor.speed = initialSpeed;
-  }
-  frequency = initialFrequency;
 }
 
 function stopTimer() {
+  //stops the timer
   clearInterval(timerInterval);
 }
 
@@ -153,15 +140,16 @@ function draw() {
       startMeteorSpawnInterval(); // Start spawning meteors
     }
   } else if (scene === "simulation") {
+    //main game
     print(timer);
-print(frequency);
-print(meteor.speed);
+    print(frequency);
+    print(meteor.speed);
     background(bg); // Set the background color to dark blue (RGB values).
 
     textSize(16);
     fill(255);
     textAlign(RIGHT, TOP);
-    text("Time: " + timer, width - 100, 10);
+    text("Time: " + timer, width - 100, 10);    //align text to top right
 
     for (let i = meteors.length - 1; i >= 0; i--) {
       //for every meteor in the array
@@ -219,10 +207,10 @@ print(meteor.speed);
   }
 }
 
-function windowResized() {
+function windowResized() {    //resize canvas when window is resized
   resizeCanvas(windowWidth, windowHeight);
 }
 
-function startMeteorSpawnInterval() {
-  meteorSpawnInterval = setInterval(spawnNewMeteor, 250); // Start spawning meteors
+function startMeteorSpawnInterval() {   //spawns meteors
+  meteorSpawnInterval = setInterval(spawnNewMeteor, 250); // Start spawning meteors every 250ms
 }
