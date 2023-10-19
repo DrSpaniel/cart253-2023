@@ -1,11 +1,13 @@
 let scene = "title"; // Initial scene is set to "title"
 let meteorSpawnInterval; // Interval ID for spawning meteors
-let timer = 0; // Timer variable
-let isTimerRunning = false; // Variable to track if the timer is running
-let oldTimer = 0;
+let timer = 0; // Timer variable, trying to use this and oldtimer to count
+let difficulty = 0;
+let frequency = 0;
+let timerInterval;
 
 class Meteor {
   constructor() {
+    //vars needed for meteors to work
     this.x = 0;
     this.y = 0;
     this.img = 0;
@@ -31,7 +33,7 @@ class Meteor {
       0,
     ];
     this.randPosY = [
-      // Meteor.y preset coordinates
+      // Predetermined locations for meteor.y
       0,
       0,
       0,
@@ -45,12 +47,12 @@ class Meteor {
       height / 2,
       height / 4,
     ];
-    this.img = loadImage("assets/images/meteor.png");
+    this.img = loadImage("assets/images/meteor.png"); //meteor image, maybe wanna make this randomized to have different meteors?
     this.spawnMeteor();
   }
 
   move() {
-    // Update the meteor's position based on its velocity.
+    // Update the meteor's position based on its velocity, which is calculated by calculateDirection()
     this.x += this.vx;
     this.y += this.vy;
   }
@@ -59,12 +61,12 @@ class Meteor {
     // Calculate the direction vector from the meteor to the mouse's last location.
     const dx = mouseX - this.x;
     const dy = mouseY - this.y;
-    const magnitude = dist(mouseX, mouseY, this.x, this.y);
+    const magnitude = dist(mouseX, mouseY, this.x, this.y); //using p5js's dist to find relative distance of mouse cursor and meteor
 
     // Normalize the direction vector to get a unit vector.
     if (this.vx === 0 && this.vy === 0) {
       //only when the meteor is spawned will it change.
-      this.initialVx = (dx / magnitude) * this.speed;
+      this.initialVx = (dx / magnitude) * this.speed; //linear algebra fuck yeah!
       this.initialVy = (dy / magnitude) * this.speed;
     }
     this.vx = this.initialVx;
@@ -72,10 +74,10 @@ class Meteor {
   }
 
   spawnMeteor() {
-    this.meteorPos = Math.floor(random(0, 11));
+    this.meteorPos = Math.floor(random(0, 12)); //12 cause the 0 is inclusive, but the 12 is non inclusive?!?!?! meaning up to 12 but not 12
     this.x = this.randPosX[this.meteorPos]; //sets predetermined locations for meteor
     this.y = this.randPosY[this.meteorPos];
-    this.initialVx = 0;
+    this.initialVx = 0; //triggers the if else in line 64.
     this.initialVy = 0;
     print("reset!"); //debug
     this.calculateDirection();
@@ -85,15 +87,32 @@ class Meteor {
 let meteors = []; // Array to hold meteor objects
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  frameRate(60);
-  mouseX = width / 2;
-  mouseY = height / 2;
+  createCanvas(windowWidth, windowHeight); //autosize
+  frameRate(60); //for preformance
+  mouseX = width / 2; //if there is no mouse input, mouseX/Y default to 0. that looks kinda weird so i made it the center of the page to it looks a little nicer.
+  mouseY = height / 2; //though i realize now this is useless, since the user has to click to start the game
   meteor = new Meteor(); // Create the initial meteor object
 }
 
 function spawnNewMeteor() {
   meteors.push(new Meteor()); // Create a new meteor and add it to the array
+}
+
+function startTimer() {
+  //trying to make a function which starts a timer from 0, counts to 1, 2, 3, etc every second until stoptimer is called
+  clearInterval(timerInterval);
+
+  timer = 0;
+  timerInterval = setInterval(function () {
+    timer++;
+  }, 1000);
+}
+
+function stopTimer() {
+  //when called, stops timer, passes timer value to oldtimer, and resets timer to 0
+  //set oldtimer to timer ONLY ONCE, otherwise it will keep updating
+
+  clearInterval(timerInterval);
 }
 
 function draw() {
@@ -103,33 +122,31 @@ function draw() {
     fill(255); // Set the fill color to white
     textAlign(CENTER, CENTER);
     textSize(60);
-    text("Space!", width / 2, height / 4);
+    text("Space!", width / 2, height / 4); //title, make it better
     textSize(29);
     text("click to start.", width / 2, (3 * height) / 4);
     textSize(8);
     text("drspaniel.com", width / 8, (7 * height) / 8); //shameless plug
+    textSize(20);
+    text("avoid the meteors!!!", width / 2, (2.5 * height) / 4);
 
     if (mouseIsPressed) {
       // If the mouse is clicked, transition to the simulation scene
       scene = "simulation";
+      startTimer(); //doesnt work, trying to make timer start here
       startMeteorSpawnInterval(); // Start spawning meteors
-      isTimerRunning = !isTimerRunning;
     }
   } else if (scene === "simulation") {
+    print(timer);
     background(0, 34, 88); // Set the background color to dark blue (RGB values).
 
-    // Update and display the timer
-    if (isTimerRunning) {
-      timer = millis() - oldTimer;
-      print("timer:" + timer);
-      print("oldTimer:" + oldTimer);
-    }
     textSize(16);
     fill(255);
     textAlign(RIGHT, TOP);
-    text("Time: " + nf(timer/1000, 0, 2), width - 100, 10);
+    text("Time: " + timer, width - 100, 10);
 
     for (let i = meteors.length - 1; i >= 0; i--) {
+      //for every meteor in the array
       const meteor = meteors[i]; // Get the current meteor object from the array.
 
       image(meteor.img, meteor.x - 32, meteor.y - 32); // Display the meteor's image at its current position with an offset to center it.
@@ -139,6 +156,7 @@ function draw() {
       meteor.move(); // Update the meteor's position based on its velocity.
 
       if (
+        //meteor touching border
         meteor.y > height ||
         meteor.y < 0 ||
         meteor.x > width ||
@@ -147,11 +165,13 @@ function draw() {
         meteors.splice(i, 1); // Remove meteors that go off-screen from the array.
       }
       if (dist(meteor.x, meteor.y, mouseX, mouseY) < 55) {
-        //64 to account of radius of both meteor and ship. probably janky.
+        //when ship touches any meteor
+        //55 to account of radius of both meteor and ship. probably janky. i could probably make it when both images overlap but argh
         // If the mouse touches a meteor, transition to the "end" scene
         scene = "end";
         clearInterval(meteorSpawnInterval); // Stop spawning meteors
-        isTimerRunning = !isTimerRunning;
+
+        stopTimer();
       }
     }
   } else if (scene === "end") {
@@ -162,7 +182,7 @@ function draw() {
     text("DEAD.", width / 2, height / 2);
 
     textSize(24);
-    text("Time: " + nf(timer/1000, 0, 2) + "s", width / 2, (3 * height) / 4) ; // Display the elapsed time
+    text("Time: " + timer + "s", width / 2, (3 * height) / 4); // Display the elapsed time
 
     textSize(24);
     text("Click to Restart", width / 2, (2.5 * height) / 4); // Restart button
@@ -172,9 +192,7 @@ function draw() {
       scene = "simulation";
       startMeteorSpawnInterval(); // Start spawning meteors
       meteors = [];
-      oldTimer = timer;  //this wont work, since millis counts even when timer is 
-      isTimerRunning = !isTimerRunning;   //resumes counting
-    
+      startTimer();
     }
   } else if (scene === "board") {
     //WIP, this will be a leaderboard to submit results. title page will have a list
