@@ -4,7 +4,6 @@ let timer = 0; // Timer variable, trying to use this and oldtimer to count
 let frequency = 0;
 let timerInterval;
 
-
 class Meteor {
   constructor() {
     //vars needed for meteors to work
@@ -47,7 +46,9 @@ class Meteor {
       height / 2,
       height / 4,
     ];
-    this.img = loadImage(`assets/images/meteors/meteor${Math.floor(random(0, 7))}.png`); //meteor image, maybe wanna make this randomized to have different meteors?
+    this.img = loadImage(
+      `assets/images/meteors/meteor${Math.floor(random(0, 7))}.png`
+    ); //meteor image, maybe wanna make this randomized to have different meteors?
     this.spawnMeteor();
   }
 
@@ -92,6 +93,7 @@ function setup() {
   mouseX = width / 2; //if there is no mouse input, mouseX/Y default to 0. that looks kinda weird so i made it the center of the page to it looks a little nicer.
   mouseY = height / 2; //though i realize now this is useless, since the user has to click to start the game
   meteor = new Meteor(); // Create the initial meteor object
+  bg = loadImage('assets/images/space.jpg');
 }
 
 function spawnNewMeteor() {
@@ -139,9 +141,7 @@ function draw() {
   } else if (scene === "simulation") {
     print(timer);
 
-    
-
-    background(0, 34, 88); // Set the background color to dark blue (RGB values).
+    background(bg); // Set the background color to dark blue (RGB values).
 
     textSize(16);
     fill(255);
@@ -175,13 +175,10 @@ function draw() {
         clearInterval(meteorSpawnInterval); // Stop spawning meteors
 
         stopTimer();
-
-        
       }
     }
   } else if (scene === "end") {
-    
-    background(0, 34, 88); // Set the background color to dark blue (RGB values).
+    background(bg); // Set the background color to dark blue (RGB values).
     fill(255); // Set the fill color to white
     textAlign(CENTER, CENTER);
     textSize(48);
