@@ -4,6 +4,7 @@ let timer = 0; // Timer variable, trying to use this and oldtimer to count
 let frequency = 0;
 let timerInterval;
 
+
 class Meteor {
   constructor() {
     //vars needed for meteors to work
@@ -138,6 +139,8 @@ function draw() {
   } else if (scene === "simulation") {
     print(timer);
 
+    
+
     background(0, 34, 88); // Set the background color to dark blue (RGB values).
 
     textSize(16);
@@ -172,9 +175,12 @@ function draw() {
         clearInterval(meteorSpawnInterval); // Stop spawning meteors
 
         stopTimer();
+
+        
       }
     }
   } else if (scene === "end") {
+    
     background(0, 34, 88); // Set the background color to dark blue (RGB values).
     fill(255); // Set the fill color to white
     textAlign(CENTER, CENTER);
