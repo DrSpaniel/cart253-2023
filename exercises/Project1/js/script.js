@@ -47,7 +47,7 @@ class Meteor {
       height / 4,
     ];
     this.img = loadImage(
-      `assets/images/meteors/meteor${Math.floor(random(0, 8))}.png` //randomizes the meteor image
+      `assets/images/meteors/meteor${Math.floor(random(0, 7))}.png` //randomizes the meteor image
     );
     this.spawnMeteor();
   }
