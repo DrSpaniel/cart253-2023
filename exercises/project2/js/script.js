@@ -16,14 +16,18 @@ function preload() {}
 //image declarations
 let bg;
 
-
-let s1
-
-
-
+let s1;
 
 let felt;
 let pins;
+
+class Item {
+  constructor(x, y, img) {
+    this.x = x;
+    this.y = y;
+    this.img = img;
+  }
+}
 
 //scene declaration
 let scene = "title";
@@ -35,8 +39,17 @@ function setup() {
   createCanvas(heightCheck(), heightCheck()); //autosize
   bg = loadImage("assets/images/bg.jpg");
   s1 = loadImage("assets/images/s1.png");
-  felt = loadImage("assets/images/felt.png");
-  pins = loadImage("assets/images/pins.png");
+
+  felt = new Item(
+    width - width / 6 - 25, //x
+    height / 2 - 25, //y
+    loadImage("assets/images/felt.png") //img
+  );
+  pins = new Item(
+    width / 6 - 25, //x
+    height - height / 3 - 25, //y
+    loadImage("assets/images/pins.png") //img
+  );
 }
 
 function heightCheck() {
@@ -92,8 +105,8 @@ function title() {
 function scene1() {
   background(s1);
 
-  image(felt, width - width / 6 - 25, height / 2 - 25); //felt on right shelf
-  image(pins, width / 6 - 25, height - height / 3 - 25); //pins on left shelf
+  image(felt.img, felt.x, felt.y); //felt on right shelf
+  image(pins.img, pins.x, pins.y); //pins on left shelf
 
   if (mouseIsPressed) {
     //print mouseX and mouseY
@@ -102,14 +115,6 @@ function scene1() {
     print("mouseY: ");
     print(mouseY);
   }
-
-}
-
-function itemDrag() {
-  //if mouse coords is over the item, and mouse is pressed, item follows mouse. if let go over the basket, dissapear and play basket dropping sound.
-
-  
-
 }
 
 function gameover() {
