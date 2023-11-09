@@ -19,6 +19,7 @@ let s1;
 
 let felt;
 let pins;
+let basket;
 let placeSound;
 
 class Item {
@@ -51,6 +52,13 @@ function setup() {
     height - height / 3 - 25, //y
     loadImage("assets/images/pins.png") //img
   );
+  
+  basket = new Item(
+    width/2 - 75, //x
+    height - height/8 - 60, //y
+    loadImage("assets/images/basket.png") //img
+  )
+
 }
 
 function heightCheck() {
@@ -103,8 +111,10 @@ function title() {
 function scene1() {
   background(s1);
 
+  image(basket.img, basket.x, basket.y); //basket on bottom shelf
   image(felt.img, felt.x, felt.y); //felt on right shelf
   image(pins.img, pins.x, pins.y); //pins on left shelf
+  
 
   if (mouseIsPressed) {
     if (
@@ -135,20 +145,20 @@ function scene1() {
 
   if (
     //if felt is within the basket area, dissapear
-    felt.x > 201 &&
-    felt.x < 355 &&
-    felt.y > 391 &&
-    felt.y < 490
+    felt.x > basket.x &&
+    felt.x < basket.x + basket.img.width &&
+    felt.y > basket.y &&
+    felt.y < basket.y + basket.img.height
     //or if pins are within the basket area, dissapear
   ) {
     placeSound.play();
     felt.x = -100;
     felt.y = -100;
   }else if(
-    pins.x > 201 &&
-    pins.x < 355 &&
-    pins.y > 391 &&
-    pins.y < 490
+    pins.x > basket.x &&
+    pins.x < basket.x + basket.img.width &&
+    pins.y > basket.y &&
+    pins.y < basket.y + basket.img.height
   ){
     placeSound.play();
     pins.x = -100;
