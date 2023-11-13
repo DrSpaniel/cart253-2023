@@ -158,7 +158,7 @@ function scene1() {
     pins.x > basket.x &&
     pins.x < basket.x + basket.img.width &&
     pins.y > basket.y &&
-    pins.y < basket.y + basket.img.height
+    pins.y < basket.y + basket.img.height 
   ){
     placeSound.play();
     pins.x = -100;
