@@ -21,16 +21,27 @@ let s3;
 let s4;
 let endscene;
 
-
 //items
 //scene1
 let felt;
 let pins;
 let basket;
 let placeSound;
+
 //scene2
-let felt1;    //too lazy to rename ugh
-let feltslice;  //
+let felt1; //too lazy to rename ugh
+let felt2;
+let felt3;
+let felt4;
+let felt5;
+let felt6;
+
+//scene3
+let bag;
+let p1;
+let p2;
+let p3;
+let p4;
 
 //used to check if its time to change scene
 let count = 0;
@@ -52,7 +63,7 @@ let scene = "title";
 function setup() {
   createCanvas(heightCheck(), heightCheck()); //autosize
 
-//*****SCENE 1*****//
+  //*****SCENE 1*****//
 
   s1 = loadImage("assets/images/scene1/s1.png");
   placeSound = loadSound("assets/sounds/place.wav");
@@ -76,19 +87,58 @@ function setup() {
 
   //*****SCENE 2*****//
 
-  s2 = loadImage("assets/images/scene2/table.png")
+  s2 = loadImage("assets/images/scene2/table.png");
 
   felt1 = new Item(
-    //x
-    //y
-    //img
-  )
+    width / 8, //x
+    height / 4, //y
+    loadImage("assets/images/scene2/felt1.png") //img
+  );
+  felt2 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene2/felt2.png") //img
+  );
+  felt3 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene2/felt3.png") //img
+  );
+  felt4 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene2/felt4.png") //img
+  );
+  felt5 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene2/felt5.png") //img
+  );
+  felt6 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene2/felt6.png") //img
+  );
 
-  feltslice = new Item(
-    //x
-    //y
-    //img
-  )
+  //*****SCENE 2*****//
+
+  s3 = loadImage("assets/images/scene3/s3.png");
+
+  // template = new Item(
+  // //x
+  // //y
+  // //img
+  // );
+}
+
+function debugClick() {
+  if (mouseIsPressed) {
+    //print mouseX and mouseY
+    print("mouseX: ");
+    print(mouseX);
+    print("mouseY: ");
+    print(mouseY);
+  }
 }
 
 function heightCheck() {
@@ -109,6 +159,7 @@ function windowResized() {
  * Description of draw()
  */
 function draw() {
+  debugClick();
   if (scene === "title") {
     title();
   } else if (scene === "scene1") {
@@ -140,7 +191,7 @@ function title() {
 
   if (mouseIsPressed) {
     // If the mouse is clicked, transition to the simulation scene
-    scene = "scene2";
+    scene = "scene1";
   }
 }
 
@@ -148,12 +199,10 @@ function scene1() {
   //set background
   background(s1);
 
-
   //set items
   image(basket.img, basket.x, basket.y); //basket on bottom shelf
   image(felt.img, felt.x, felt.y); //felt on right shelf
   image(pins.img, pins.x, pins.y); //pins on left shelf
-
 
   //set behaviour
   if (mouseIsPressed) {
@@ -175,15 +224,7 @@ function scene1() {
       pins.x = mouseX - pins.img.width / 2;
       pins.y = mouseY - pins.img.height / 2;
     }
-
-    //print mouseX and mouseY
-    print("mouseX: ");
-    print(mouseX);
-    print("mouseY: ");
-    print(mouseY);
   }
-
-
 
   //set behaviour 2
   if (
@@ -205,67 +246,135 @@ function scene1() {
     pins.y < basket.y + basket.img.height
   ) {
     placeSound.play();
-    count++;  //count to 2
+    count++; //count to 2
     pins.x = -100;
     pins.y = -100;
   }
 
-  if (count === 2){
+  if (count === 2) {
     scene = "scene2";
     count = 0;
   }
-
-
 }
 
-function scene2(){      //cut materials with scissors
-//todo art: table wood on spotlight, red felt, red strip, scissors for cursor 
-
-
-      //set background
-      background(s2);
-
-
-      //set items
-
-
-      //set behaviour
-      //mouse will be set to scissors.
-      //each time the user clicks on the dotted lines, the image moves to the left simulating it being cut. then a strip of it separates a little away.
-  
-
-      //set end state
-      //once all cut, using count, switch to next scene.
-}
-
-function scene3(){    //give squares to protestors
-      //set background
-      
-
-      //set items
-
-
-      //set behaviour
-
-
-      //set end state
-}
-
-function scene4(){    //protest!!!
+function scene2() {
+  //cut squares
   //set background
-  
+  background(s2);
+
+  textSize(45);
+
+  if (count < 5) {
+    cursor("assets/images/scene2/scissors.png"); //set cursor to scissors
+
+    textSize(29);
+    text("click the blue lines to cut.", width / 2, height / 6); //title, make it better
+  } else {
+    textSize(29);
+    text("congrats!!", width / 2, height / 6); //title, make it better
+    text("click to continue!", width / 2, (5 * height) / 6); //title, make it better
+    if (mouseIsPressed) {
+      //in the line below, make the cursor default
+      cursor(ARROW);
+      scene = "scene3";
+      count = 0;
+    }
+  }
 
   //set items
-
-
+  image(felt1.img, felt1.x, felt1.y); //felt on table
+  image(felt2.img, felt2.x, felt2.y); //felt on table, cut once
+  image(felt3.img, felt3.x, felt3.y); //felt on table, cut twice
+  image(felt4.img, felt4.x, felt4.y); //felt on table, cut thrice
   //set behaviour
 
+  //if user clicks in predetermined bounds of felt1, cut. also vertically crop the felt1.img by the mouse position
+  //cutting means replacing the cropped portion with a slice.
+  //debugClick();
+  if (mouseIsPressed) {
+    print(count);
 
+    if (count == 0) {
+      if (
+        mouseX > 440 &&
+        mouseX < 520 &&
+        mouseY > felt1.y &&
+        mouseY < felt1.y + 340
+      ) {
+        felt1.img = felt2.img;
+        count = 1;
+      }
+    }
+
+    if (count == 1) {
+      if (
+        mouseX > 311 &&
+        mouseX < 400 &&
+        mouseY > felt1.y &&
+        mouseY < felt1.y + 340
+      ) {
+        felt1.img = felt3.img;
+        count = 2;
+      }
+    }
+
+    if (count == 2) {
+      if (
+        mouseX > 142 &&
+        mouseX < 221 &&
+        mouseY > felt1.y &&
+        mouseY < felt1.y + 340
+      ) {
+        print("hooray!");
+        felt1.img = felt4.img;
+        count = 3;
+      }
+    }
+
+    if (count == 3) {
+      //begin horiz cut
+      if (
+        mouseX > felt1.x &&
+        mouseX < felt1.x + 530 &&
+        mouseY > 365 &&
+        mouseY < 423
+      ) {
+        print("hooray!");
+        felt1.img = felt5.img;
+        count = 4;
+      }
+    }
+    if (count == 4) {
+      if (
+        mouseX > felt1.x &&
+        mouseX < felt1.x + 530 &&
+        mouseY > 246 &&
+        mouseY < 296
+      ) {
+        print("hooray!");
+        felt1.img = felt6.img;
+        count = 5;
+      }
+    }
+  }
+}
+
+function scene3() {
+  //give squares to protestors
+  //set background
+  background(s3);
+  //set items
+  //set behaviour
   //set end state
 }
 
-
-
+function scene4() {
+  //protest!!!
+  //set background
+  //set items
+  //set behaviour
+  //set end state
+}
 
 function gameover() {
   background(0, 34, 88); // Set the background color to dark blue (RGB values).
