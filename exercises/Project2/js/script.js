@@ -1,9 +1,8 @@
 /**
- * Title of Project
- * Author Name
+ * red square simulator
+ * Daniel Gonzalez
  *
- * This is a template. You must fill in the title, author,
- * and this description to match your project!
+ * god
  */
 
 "use strict";
@@ -123,6 +122,36 @@ function setup() {
   //*****SCENE 2*****//
 
   s3 = loadImage("assets/images/scene3/s3.png");
+
+  bag = new Item(
+    width / 6, //x
+    (1.8 * height) / 4, //y
+    loadImage("assets/images/scene3/bag.png") //img
+  );
+
+  p1 = new Item(
+    (2 * width) / 4, //x
+    height / 4, //y
+    loadImage("assets/images/scene3/p1.png") //img
+  );
+
+  p2 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene3/p2.png") //img
+  );
+
+  p3 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene3/p3.png") //img
+  );
+
+  p4 = new Item(
+    width + 10, //x
+    0, //y
+    loadImage("assets/images/scene3/p4.png") //img
+  );
 
   // template = new Item(
   // //x
@@ -363,9 +392,39 @@ function scene3() {
   //give squares to protestors
   //set background
   background(s3);
+
+  debugClick();
+
+
   //set items
+  image(bag.img, bag.x, bag.y);
+  image(p1.img, p1.x, p1.y);
   //set behaviour
+
+  if (mouseIsPressed === true) {
+    if (
+      mouseX > bag.x &&
+      mouseX < bag.x + 250 &&
+      mouseY > bag.y &&
+      mouseY < bag.y + 480
+    ) {
+      print("yay!")
+      cursor("assets/images/scene3/closedhand.png");
+    }
+
+
+
+  }else if (mouseIsPressed === false){
+    cursor("assets/images/scene3/openhand.png");
+  }
+
+
+  //when clicking on bag, change cursor to grabbing squares
+  //when let go on protestors, change hand to let go hand
+
   //set end state
+
+  //end state when count reaches 5, giving all protestors a square.
 }
 
 function scene4() {
