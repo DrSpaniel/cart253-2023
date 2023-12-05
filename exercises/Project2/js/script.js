@@ -37,13 +37,17 @@ let felt6;
 
 //scene3
 let bag;
-let p1;
+let p1; //unused, idek
 let p2;
 let p3;
 let p4;
 
+//scene4
+let armcursor;
+
 //used to check if its time to change scene
 let count = 0;
+let toggle = false;
 
 class Item {
   constructor(x, y, img) {
@@ -119,7 +123,7 @@ function setup() {
     loadImage("assets/images/scene2/felt6.png") //img
   );
 
-  //*****SCENE 2*****//
+  //*****SCENE 3*****//
 
   s3 = loadImage("assets/images/scene3/s3.png");
 
@@ -130,8 +134,8 @@ function setup() {
   );
 
   p1 = new Item(
-    (2 * width) / 4, //x
-    height / 4, //y
+    (2.5 * width) / 4, //x
+    height / 3, //y
     loadImage("assets/images/scene3/p1.png") //img
   );
 
@@ -151,6 +155,16 @@ function setup() {
     width + 10, //x
     0, //y
     loadImage("assets/images/scene3/p4.png") //img
+  );
+
+  //*****SCENE 4*****//
+
+  s4 = loadImage("assets/images/scene4/s4.png");
+
+  armcursor = new Item(
+    mouseX,
+    mouseY,
+    loadImage("assets/images/scene4/arm.png")
   );
 
   // template = new Item(
@@ -184,11 +198,8 @@ function windowResized() {
   resizeCanvas(heightCheck(), heightCheck());
 }
 
-/**
- * Description of draw()
- */
 function draw() {
-  debugClick();
+  //debugClick();
   if (scene === "title") {
     title();
   } else if (scene === "scene1") {
@@ -245,6 +256,7 @@ function scene1() {
       felt.x = mouseX - felt.img.width / 2;
       felt.y = mouseY - felt.img.height / 2;
     } else if (
+      //if mouse is in pins area
       mouseX > pins.x &&
       mouseX < pins.x + pins.img.width &&
       mouseY > pins.y &&
@@ -262,13 +274,13 @@ function scene1() {
     felt.x < basket.x + basket.img.width &&
     felt.y > basket.y &&
     felt.y < basket.y + basket.img.height
-    //or if pins are within the basket area, dissapear
   ) {
     placeSound.play();
     count++;
     felt.x = -100;
     felt.y = -100;
   } else if (
+    //or if pins are within the basket area, dissapear
     pins.x > basket.x &&
     pins.x < basket.x + basket.img.width &&
     pins.y > basket.y &&
@@ -303,18 +315,14 @@ function scene2() {
     text("congrats!!", width / 2, height / 6); //title, make it better
     text("click to continue!", width / 2, (5 * height) / 6); //title, make it better
     if (mouseIsPressed) {
-      //in the line below, make the cursor default
-      cursor(ARROW);
       scene = "scene3";
-      count = 0;
+      count = 1;
     }
   }
 
   //set items
   image(felt1.img, felt1.x, felt1.y); //felt on table
-  image(felt2.img, felt2.x, felt2.y); //felt on table, cut once
-  image(felt3.img, felt3.x, felt3.y); //felt on table, cut twice
-  image(felt4.img, felt4.x, felt4.y); //felt on table, cut thrice
+
   //set behaviour
 
   //if user clicks in predetermined bounds of felt1, cut. also vertically crop the felt1.img by the mouse position
@@ -332,6 +340,7 @@ function scene2() {
       ) {
         felt1.img = felt2.img;
         count = 1;
+        //play cut sound each time count goes
       }
     }
 
@@ -365,8 +374,8 @@ function scene2() {
       if (
         mouseX > felt1.x &&
         mouseX < felt1.x + 530 &&
-        mouseY > 365 &&
-        mouseY < 423
+        mouseY > 341 &&
+        mouseY < 432
       ) {
         print("hooray!");
         felt1.img = felt5.img;
@@ -377,14 +386,28 @@ function scene2() {
       if (
         mouseX > felt1.x &&
         mouseX < felt1.x + 530 &&
-        mouseY > 246 &&
-        mouseY < 296
+        mouseY > 233 &&
+        mouseY < 314
       ) {
         print("hooray!");
         felt1.img = felt6.img;
         count = 5;
+        mouseIsPressed = false; //reset mouseIsPressed to false so that the user can click to continue. THIS TOOK ME SO LONG TO REALIZE AAAAAAAAAAAHHHHHHHHHH
       }
     }
+  }
+}
+
+function ppl() {
+  //for time efficiency's sake, this was the best i could do. given more time i could have probably done a more elegant solution. but hey! if its stupid and it works IT AINT STUPID!!!!!!!!!!!! ;-; (yeah i could have managed my time better but i was busy working on the real protest lol)
+  if (count === 1) {
+    p1.img = p1.img;
+  } else if (count === 2) {
+    p1.img = p2.img;
+  } else if (count === 3) {
+    p1.img = p3.img;
+  } else if (count === 4) {
+    p1.img = p4.img;
   }
 }
 
@@ -393,8 +416,9 @@ function scene3() {
   //set background
   background(s3);
 
+  //debug
+  print(count);
   debugClick();
-
 
   //set items
   image(bag.img, bag.x, bag.y);
@@ -408,30 +432,58 @@ function scene3() {
       mouseY > bag.y &&
       mouseY < bag.y + 480
     ) {
-      print("yay!")
-      cursor("assets/images/scene3/closedhand.png");
+      cursor("assets/images/scene3/closedhand.png"); //pickup squares
+      toggle = true; //used to see where the cursor just was.
     }
+  } else if (mouseIsPressed === false) {
+    if (toggle === true) {
+      //if user picks up square, toggle becomes true. then if they let go on the protestor, change the protestor.
+      if (
+        mouseX > p1.x &&
+        mouseX < p1.x + 150 &&
+        mouseY > p1.y &&
+        mouseY < p1.y + 230
+      ) {
+        count++; //idk
+        print("yipee!!"); //THIS WORKS!!!!!!!!!!!!!! I CANT BELIEVE IT
+        ppl();
 
+        //play "thanks!" sound effect
 
-
-  }else if (mouseIsPressed === false){
+        toggle = false;
+      }
+    }
     cursor("assets/images/scene3/openhand.png");
+    toggle = false; //this fixes so when user picks up square but does not drop on protestor, but then hovers over protestor, it will not change.
   }
 
-
-  //when clicking on bag, change cursor to grabbing squares
-  //when let go on protestors, change hand to let go hand
-
   //set end state
-
+  if (count >= 5) {
+    print("AHHHHHHHHHHHHHH");
+    scene = "scene4";
+  }
   //end state when count reaches 5, giving all protestors a square.
 }
 
 function scene4() {
   //protest!!!
-  //set background
+  //set background to protest crowd
+  background(s4);
+
+  //cursor("assets/images/scene4/armtest.png"); //this likely isnt working cause the image is too huge. also be sure to fix the offset cause thats important
+
+  cursor("none");
+
+  armcursor.x = mouseX;
+  armcursor.y = mouseY;
+  image(armcursor.img, armcursor.x, armcursor.y);
+
   //set items
+  //just turn cursor to hand holding protest sign.
+
   //set behaviour
+
+  //just show some text saying shake sign, then after like 15 seconds, change to end.
   //set end state
 }
 
