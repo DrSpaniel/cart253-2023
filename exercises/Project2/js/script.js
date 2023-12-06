@@ -231,7 +231,8 @@ function title() {
 
   if (mouseIsPressed) {
     // If the mouse is clicked, transition to the simulation scene
-    scene = "scene1";
+    scene = "scene4";
+    mouseIsPressed = false;
   }
 }
 
@@ -317,6 +318,7 @@ function scene2() {
     if (mouseIsPressed) {
       scene = "scene3";
       count = 1;
+      
     }
   }
 
@@ -340,6 +342,7 @@ function scene2() {
       ) {
         felt1.img = felt2.img;
         count = 1;
+        mouseIsPressed = false;
         //play cut sound each time count goes
       }
     }
@@ -353,6 +356,7 @@ function scene2() {
       ) {
         felt1.img = felt3.img;
         count = 2;
+        mouseIsPressed = false;
       }
     }
 
@@ -366,6 +370,7 @@ function scene2() {
         print("hooray!");
         felt1.img = felt4.img;
         count = 3;
+        mouseIsPressed = false;
       }
     }
 
@@ -380,6 +385,7 @@ function scene2() {
         print("hooray!");
         felt1.img = felt5.img;
         count = 4;
+        mouseIsPressed = false;
       }
     }
     if (count == 4) {
@@ -446,7 +452,7 @@ function scene3() {
       ) {
         count++; //idk
         print("yipee!!"); //THIS WORKS!!!!!!!!!!!!!! I CANT BELIEVE IT
-        ppl();
+        ppl();    //duct tape solution to change person images
 
         //play "thanks!" sound effect
 
@@ -457,18 +463,35 @@ function scene3() {
     toggle = false; //this fixes so when user picks up square but does not drop on protestor, but then hovers over protestor, it will not change.
   }
 
+
+if (count < 5){
+  text("give squares to the protestors!!!", width / 2, height / 6); //title, make it better
+}
+
+
   //set end state
-  if (count >= 5) {
+  if (count >= 6) {
     print("AHHHHHHHHHHHHHH");
     scene = "scene4";
+    count = 0;
+    mouseIsPressed = false; //just so ppl dont accidentally misclick in the next scene
+  }else if (count === 5){
+    text("awesome!!!!!!", width / 2, height / 6); //title, make it better
+    text("click to protest!!!!!!!!!", width / 2, (5 * height) / 6); //title, make it better
+    if (mouseIsPressed === true){
+      count++;
+    }
   }
-  //end state when count reaches 5, giving all protestors a square.
 }
 
 function scene4() {
   //protest!!!
   //set background to protest crowd
   background(s4);
+  textSize(40);
+  text("PROTEST!!!!!!!!!!!!!!!!!", width / 2, height / 6);
+  textSize(17);
+  text("(click to go back to main page)", width / 2, height / 6 + 50);
 
   //cursor("assets/images/scene4/armtest.png"); //this likely isnt working cause the image is too huge. also be sure to fix the offset cause thats important
 
@@ -482,9 +505,15 @@ function scene4() {
   //just turn cursor to hand holding protest sign.
 
   //set behaviour
+  //play booing and protest sounds?!?!?! looping?/!?!?!
 
   //just show some text saying shake sign, then after like 15 seconds, change to end.
   //set end state
+  if (mouseIsPressed){
+    //if mouse is clicked, redirect to drspaniel.com
+    window.location.href = "https://drspaniel.com";
+
+  }
 }
 
 function gameover() {
