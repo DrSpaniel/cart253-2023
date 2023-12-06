@@ -2,7 +2,8 @@
  * red square simulator
  * Daniel Gonzalez
  *
- * god
+ * red square simulator. goes thru the process of making a red square, from buying the materials to protesting.
+ *  yes, there are some duct tape solutions, but hey! if it works, it works!
  */
 
 "use strict";
@@ -25,7 +26,12 @@ let endscene;
 let felt;
 let pins;
 let basket;
+
 let placeSound;
+let snip;
+let pickup;
+let drop;
+let thanks;
 
 //scene2
 let felt1; //too lazy to rename ugh
@@ -47,9 +53,9 @@ let armcursor;
 
 //used to check if its time to change scene
 let count = 0;
-let toggle = false;
+let toggle = false;   //used to see where the cursor just was.
 
-class Item {
+class Item {    //template
   constructor(x, y, img) {
     this.x = x;
     this.y = y;
@@ -61,15 +67,20 @@ class Item {
 let scene = "title";
 
 /**
- * Description of setup
+ * just setting stuff up
  */
 function setup() {
   createCanvas(heightCheck(), heightCheck()); //autosize
 
+  //*****SOUNDS*****//
+  placeSound = loadSound("assets/sounds/place.wav");
+  snip = loadSound("assets/sounds/snip.wav");
+  pickup = loadSound("assets/sounds/pickup.wav");
+  drop = loadSound("assets/sounds/drop.wav");
+
   //*****SCENE 1*****//
 
   s1 = loadImage("assets/images/scene1/s1.png");
-  placeSound = loadSound("assets/sounds/place.wav");
 
   felt = new Item(
     width - width / 6 - 25, //x
@@ -166,15 +177,9 @@ function setup() {
     mouseY,
     loadImage("assets/images/scene4/arm.png")
   );
-
-  // template = new Item(
-  // //x
-  // //y
-  // //img
-  // );
 }
 
-function debugClick() {
+function debugClick() {   //used to determine coords of mouse
   if (mouseIsPressed) {
     //print mouseX and mouseY
     print("mouseX: ");
@@ -185,7 +190,7 @@ function debugClick() {
 }
 
 function heightCheck() {
-  //make sure the square fits in the window
+  //make sure the square fits in the window. plz dont resize the window while playing the game. it will break.
   if (windowHeight > windowWidth) {
     return windowWidth;
   } else {
@@ -231,8 +236,8 @@ function title() {
 
   if (mouseIsPressed) {
     // If the mouse is clicked, transition to the simulation scene
-    scene = "scene4";
-    mouseIsPressed = false;
+    scene = "scene1";
+    mouseIsPressed = false;   //prevent misclicks
   }
 }
 
@@ -268,7 +273,7 @@ function scene1() {
     }
   }
 
-  //set behaviour 2
+  //set behaviour 2 
   if (
     //if felt is within the basket area, dissapear
     felt.x > basket.x &&
@@ -318,7 +323,6 @@ function scene2() {
     if (mouseIsPressed) {
       scene = "scene3";
       count = 1;
-      
     }
   }
 
@@ -342,6 +346,7 @@ function scene2() {
       ) {
         felt1.img = felt2.img;
         count = 1;
+        snip.play();
         mouseIsPressed = false;
         //play cut sound each time count goes
       }
@@ -356,6 +361,7 @@ function scene2() {
       ) {
         felt1.img = felt3.img;
         count = 2;
+        snip.play();
         mouseIsPressed = false;
       }
     }
@@ -367,9 +373,10 @@ function scene2() {
         mouseY > felt1.y &&
         mouseY < felt1.y + 340
       ) {
-        print("hooray!");
+        
         felt1.img = felt4.img;
         count = 3;
+        snip.play();
         mouseIsPressed = false;
       }
     }
@@ -382,9 +389,10 @@ function scene2() {
         mouseY > 341 &&
         mouseY < 432
       ) {
-        print("hooray!");
+       
         felt1.img = felt5.img;
         count = 4;
+        snip.play();
         mouseIsPressed = false;
       }
     }
@@ -395,9 +403,10 @@ function scene2() {
         mouseY > 233 &&
         mouseY < 314
       ) {
-        print("hooray!");
+        
         felt1.img = felt6.img;
         count = 5;
+        snip.play();
         mouseIsPressed = false; //reset mouseIsPressed to false so that the user can click to continue. THIS TOOK ME SO LONG TO REALIZE AAAAAAAAAAAHHHHHHHHHH
       }
     }
@@ -416,7 +425,7 @@ function ppl() {
     p1.img = p4.img;
   }
 }
-
+let pickupsound = 0;    //without this the sound spams a lot and its annoying
 function scene3() {
   //give squares to protestors
   //set background
@@ -430,7 +439,9 @@ function scene3() {
   image(bag.img, bag.x, bag.y);
   image(p1.img, p1.x, p1.y);
   //set behaviour
-
+  if (pickupsound === 1) {
+    pickup.play();
+  }
   if (mouseIsPressed === true) {
     if (
       mouseX > bag.x &&
@@ -439,6 +450,7 @@ function scene3() {
       mouseY < bag.y + 480
     ) {
       cursor("assets/images/scene3/closedhand.png"); //pickup squares
+      pickupsound++;
       toggle = true; //used to see where the cursor just was.
     }
   } else if (mouseIsPressed === false) {
@@ -452,10 +464,9 @@ function scene3() {
       ) {
         count++; //idk
         print("yipee!!"); //THIS WORKS!!!!!!!!!!!!!! I CANT BELIEVE IT
-        ppl();    //duct tape solution to change person images
-
-        //play "thanks!" sound effect
-
+        drop.play();
+        ppl(); //duct tape solution to change person images
+        pickupsound = 0;
         toggle = false;
       }
     }
@@ -463,22 +474,20 @@ function scene3() {
     toggle = false; //this fixes so when user picks up square but does not drop on protestor, but then hovers over protestor, it will not change.
   }
 
-
-if (count < 5){
-  text("give squares to the protestors!!!", width / 2, height / 6); //title, make it better
-}
-
+  if (count < 5) {
+    text("give squares to the protestors!!!", width / 2, height / 6);
+  }
 
   //set end state
   if (count >= 6) {
-    print("AHHHHHHHHHHHHHH");
+   
     scene = "scene4";
     count = 0;
     mouseIsPressed = false; //just so ppl dont accidentally misclick in the next scene
-  }else if (count === 5){
+  } else if (count === 5) {
     text("awesome!!!!!!", width / 2, height / 6); //title, make it better
     text("click to protest!!!!!!!!!", width / 2, (5 * height) / 6); //title, make it better
-    if (mouseIsPressed === true){
+    if (mouseIsPressed === true) {
       count++;
     }
   }
@@ -507,14 +516,16 @@ function scene4() {
   //set behaviour
   //play booing and protest sounds?!?!?! looping?/!?!?!
 
-  //just show some text saying shake sign, then after like 15 seconds, change to end.
   //set end state
-  if (mouseIsPressed){
+  if (mouseIsPressed) {
     //if mouse is clicked, redirect to drspaniel.com
     window.location.href = "https://drspaniel.com";
-
   }
 }
+
+
+//game over screen was never used. whatever!!
+
 
 function gameover() {
   background(0, 34, 88); // Set the background color to dark blue (RGB values).
